@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<registry
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    i18n:domain="kcrw.tinymce_imagedrop">
+
+  <!-- Plone 5 registry setting -->
+  <records prefix="plone" condition="installed Products.CMFPlone.patterns"
+           interface="Products.CMFPlone.interfaces.controlpanel.ITinyMCESchema">
+    <value key="custom_plugins" purge="false">
+      <element>paste_plone_image|/++resource++kcrw.tinymce_imagedrop/tinymce_image_paste.js</element>
+    </value>
+    <value key="other_settings">{"paste_data_images": true}</value>
+  </records>
+
+</registry>

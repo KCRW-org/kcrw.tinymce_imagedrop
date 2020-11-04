@@ -1,0 +1,43 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    i18n_domain="kcrw.tinymce_imagedrop">
+
+  <genericsetup:registerProfile
+      name="default"
+      title="kcrw.tinymce_imagedrop"
+      directory="profiles/default"
+      description="Installs the kcrw.tinymce_imagedrop add-on."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      post_handler=".setuphandlers.post_install"
+      />
+
+  <genericsetup:registerProfile
+      name="uninstall"
+      title="kcrw.tinymce_imagedrop (uninstall)"
+      directory="profiles/uninstall"
+      description="Uninstalls the kcrw.tinymce_imagedrop add-on."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      post_handler=".setuphandlers.uninstall"
+      />
+
+  <utility
+      factory=".setuphandlers.HiddenProfiles"
+      name="kcrw.tinymce_imagedrop-hiddenprofiles"
+      />
+
+  <browser:page
+      for="*"
+      name="create-dropped-images"
+      class=".view.CreateDroppedImages"
+      permission="cmf.AddPortalContent"
+      />
+
+  <!-- Publish static files -->
+  <browser:resourceDirectory
+      name="kcrw.tinymce_imagedrop"
+      directory="static"
+      />
+
+</configure>
