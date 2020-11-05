@@ -10,7 +10,7 @@ def _patched_get_tinymce_options(context, field, request):
     from plone.app.widgets import utils
     from Products.CMFCore.utils import getToolByName
     portal_url = getToolByName(context, 'portal_url')()
-    options = utils._orig_get_tinymce_options(context, field, request)
+    options = utils._ktid_orig_get_tinymce_options(context, field, request)
     config = options.setdefault('tiny', {})
     config['paste_data_images'] = True
     config['external_plugins'] = {
@@ -23,10 +23,11 @@ def patch_plone4_tinymce_config():
     from plone.app.widgets import utils
     from plone.app.widgets import dx
     from plone.app.widgets import at
-    utils._orig_get_tinymce_options = utils.get_tinymce_options
-    utils.get_tinymce_options = _patched_get_tinymce_options
-    dx.get_tinymce_options = _patched_get_tinymce_options
-    at.get_tinymce_options = _patched_get_tinymce_options
+    if getattr(utils, '_ktid_orig_get_tinymce_options', None) is None:
+        utils._ktid_orig_get_tinymce_options = utils.get_tinymce_options
+        utils.get_tinymce_options = _patched_get_tinymce_options
+        dx.get_tinymce_options = _patched_get_tinymce_options
+        at.get_tinymce_options = _patched_get_tinymce_options
 
 
 try:

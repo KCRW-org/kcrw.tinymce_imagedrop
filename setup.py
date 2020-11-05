@@ -50,7 +50,7 @@ setup(
         'setuptools',
         # -*- Extra requirements: -*-
         'z3c.jbot',
-        'plone.api>=1.8.4',
+        'plone.api',
         'plone.app.widgets',
     ],
     extras_require={
