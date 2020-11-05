@@ -58,11 +58,12 @@ class CreateDroppedImages(BrowserView):
                     title="Pasted Image"
                 )
                 if item is None:
+                    uids.append(None)
                     continue
                 uids.append(item.UID())
                 self.set_image(item, data)
 
         response.setHeader('Content-Type', 'application/json; charset=utf-8')
         return json.dumps({
-            'images': [self.img_template.format(uid=uid) for uid in uids if uid]
+            'images': [(uid and self.img_template.format(uid=uid) or '') for uid in uids]
         })
