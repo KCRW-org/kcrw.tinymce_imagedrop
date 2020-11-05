@@ -25,7 +25,7 @@ kcrw.tinymce_imagedrop
 Dropping images will automatically create Image content in the Plone site and render them in
 the WYSIWYG using UID references.
 
-This add-on support Plone 5.x and Plone 4.3 (with TinyMCE 4 enabled via ``plone.app.widgets``).
+This add-on supports Plone 5.x and Plone 4.3 (with TinyMCE 4 enabled via ``plone.app.widgets``).
 
 Features
 --------
