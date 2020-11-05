@@ -21,16 +21,18 @@
 kcrw.tinymce_imagedrop
 ======================
 
-``tinymce_imagedrop`` is a Plone add-on that enabled dragging images into TinyMCE 4 to automatically create Image content
-in the Plone site and renders them in the WYSIWYG using UID references. The add-on support Plone 5.x and Plone 4.3 with
-TinyMCE 4 enabled via ``plone.app.widgets``.
+``kcrw.tinymce_imagedrop`` is a Plone add-on which allows users to drag and drop images into TinyMCE 4.
+Dropping images will automatically create Image content in the Plone site and render them in
+the WYSIWYG using UID references.
+
+This add-on support Plone 5.x and Plone 4.3 (with TinyMCE 4 enabled via ``plone.app.widgets``).
 
 Features
 --------
 
-- Provides a Javascript Plugin for TinyMCE for that enables uploading images to a Plone view
-- Provides a Plone view ``create-dropped-images`` which creates Image content in the nearest container where allowed
-- The view can be overriden to customize the image type, the creation location, and the markup used by default for the images.
+- Provides a Javascript Plugin for TinyMCE which handles uploading images via a browser view
+- Provides a Plone browser view ``@@create-dropped-images`` which creates Image content in the nearest container allowed.
+- The view can be overriden to customize the image type, the image creation location, or the markup used for the images.
 
 Installation
 ------------
