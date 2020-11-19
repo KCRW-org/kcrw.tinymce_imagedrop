@@ -24,21 +24,6 @@ tinymce.PluginManager.add('paste_plone_image', function(editor, url) {
         file_reader.readAsBinaryString(blob);
       });
     };
-    const handle_remove = function(ev, editor) {
-      ev.stopPropagation();
-      ev.preventDefault();
-      alert('TinyMCE is still uploading images. Please wait before unloading the editor');
-    };
-    const start_replace = function() {
-      editor.destroyed = 1;
-      editor.removed = 1;
-      editor.on('Remove', handle_remove);
-    };
-    const finish_replace = function() {
-      editor.off('Remove', handle_remove);
-      if ('destroyed' in editor) delete editor.destroyed;
-      if ('removed' in editor) delete editor.removed;
-    };
     const handle_failure = function(blob_id) {
       let img = editor.contentDocument.getElementById('blob-' + blob_id);
       let current_container = img.parentNode;
@@ -47,6 +32,28 @@ tinymce.PluginManager.add('paste_plone_image', function(editor, url) {
       error.textContent = ' Error uploading image. See logs for details. ';
       current_container.insertBefore(error, img);
       img.remove();
+    };
+    const start_replace = function() {
+      const el_name = editor.getElement().name;
+      let controls = Array.from(document.getElementsByClassName('submit-widget')).concat(
+        Array.from(document.getElementsByName('form.button.save'))).concat(
+        Array.from(document.getElementsByName('form.button.cancel'))).concat(
+        Array.from(document.getElementsByName(el_name + '.mimeType'))).concat(
+        Array.from(el_name + '_text_format'));
+      for (let i = 0; i < controls.length; i++) {
+        controls[i].disabled = true;
+      }
+    };
+    const finish_replace = function() {
+      const el_name = editor.getElement().name;
+      let controls = Array.from(document.getElementsByClassName('submit-widget')).concat(
+        Array.from(document.getElementsByName('form.button.save'))).concat(
+        Array.from(document.getElementsByName('form.button.cancel'))).concat(
+        Array.from(document.getElementsByName(el_name + '.mimeType'))).concat(
+        Array.from(el_name + '_text_format'));
+      for (let i = 0; i < controls.length; i++) {
+        controls[i].disabled = false;
+      }
     };
     const upload_blobs_for_imgs = function (files) {
       $.ajax({
