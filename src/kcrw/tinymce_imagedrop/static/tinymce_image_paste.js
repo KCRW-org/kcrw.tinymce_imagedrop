@@ -24,6 +24,21 @@ tinymce.PluginManager.add('paste_plone_image', function(editor, url) {
         file_reader.readAsBinaryString(blob);
       });
     };
+    const handle_remove = function(ev, editor) {
+      ev.stopPropagation();
+      ev.preventDefault();
+      alert('TinyMCE is still uploading images. Please wait before unloading the editor');
+    };
+    const start_replace = function() {
+      editor.destroyed = 1;
+      editor.removed = 1;
+      editor.on('Remove', handle_remove);
+    };
+    const finish_replace = function() {
+      editor.off('Remove', handle_remove);
+      if ('destroyed' in editor) delete editor.destroyed;
+      if ('removed' in editor) delete editor.removed;
+    };
     const handle_failure = function(blob_id) {
       let img = editor.contentDocument.getElementById('blob-' + blob_id);
       let current_container = img.parentNode;
@@ -61,10 +76,12 @@ tinymce.PluginManager.add('paste_plone_image', function(editor, url) {
             current_container.replaceChild(new_elem, img);
           }
         }
+        finish_replace();
       }).fail(function () {
         for (let i = 0; i < blob_ids.length; i++) {
           handle_failure(blob_ids[i]);
         }
+        finish_replace();
       });
     };
     const failure_handler = function (img, blob_id) {
@@ -87,6 +104,7 @@ tinymce.PluginManager.add('paste_plone_image', function(editor, url) {
       }
       blob_promises.push(promise);
     }
+    start_replace();
     Promise.all(blob_promises).then(upload_blobs_for_imgs);
   });
   return {
