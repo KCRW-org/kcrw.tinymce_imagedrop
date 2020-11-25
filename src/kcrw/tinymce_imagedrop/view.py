@@ -20,8 +20,9 @@ class CreateDroppedImages(BrowserView):
     img_type = "Image"
     img_template = """
     <p>
-      <img src="resolveuid/{uid}/@@images/image" data-val="{uid}" data-linktype="image" class="image-inline" />
-    </p>"""
+      <img src="resolveuid/{uid}/@@images/image/large" data-val="{uid}" data-scale="large" data-linktype="image" class="image-inline" />
+    </p>
+    """
 
     def get_image_container(self):
         container = None

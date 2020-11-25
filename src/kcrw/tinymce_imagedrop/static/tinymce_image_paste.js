@@ -78,6 +78,11 @@ tinymce.PluginManager.add('paste_plone_image', function(editor, url) {
                 img.remove();
                 current_container.after(new_elem);
                 continue;
+              } else if (current_container.tagName == 'LI' || current_container.tagName == 'DD' || current_container.tagName == 'DT') {
+                img.remove();
+                let list_wrapper = current_container.parentNode;
+                list_wrapper.after(new_elem);
+                continue;
               }
             }
             current_container.replaceChild(new_elem, img);
