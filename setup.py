@@ -13,7 +13,7 @@ long_description = '\n\n'.join([
 
 setup(
     name='kcrw.tinymce_imagedrop',
-    version='1.0',
+    version='1.0.1',
     description="A Plone add-on that adds image drag and drop to TinyMCE 4 in Plone.",
     long_description=long_description,
     # Get more from https://pypi.org/classifiers/
