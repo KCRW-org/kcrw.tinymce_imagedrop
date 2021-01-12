@@ -27,7 +27,12 @@ class CreateDroppedImages(BrowserView):
     def get_image_container(self):
         container = None
         for parent in aq_chain(aq_inner(self.context)):
-            types = getattr(parent.aq_explicit, 'getLocallyAllowedTypes', ()) and parent.getLocallyAllowedTypes()
+            if getattr(parent.aq_explicit, 'getLocallyAllowedTypes', ()):
+                types = set(parent.getLocallyAllowedTypes())
+            elif getattr(parent.aq_explicit, 'allowedContentTypes', ()):
+                types = {t.getId() for t in parent.allowedContentTypes()}
+            else:
+                types = set()
             if self.img_type in types or getattr(parent, 'meta_type', None) == 'Plone Site':
                 container = parent
                 break
