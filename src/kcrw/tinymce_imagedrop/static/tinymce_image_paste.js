@@ -1,4 +1,32 @@
 tinymce.PluginManager.add('paste_plone_image', function(editor, url) {
+  const create_set = function (array) {
+    let new_set = new Set();
+    for (i = 0; i < array.length; i++) {
+      new_set.add(array[i]);
+    }
+    return new_set;
+  };
+  const ALLOWED_BLOCK_CONTAINERS = [
+    'HTML', 'BODY', 'HEADER', 'FOOTER', 'DIV', 'MAIN',
+    'SECTION', 'ARTICLE', 'ASIDE', 'FIELDSET', 'FORM',
+    'BLOCKQUOTE'
+  ];
+  const CONTAINER_CHECKER = create_set(ALLOWED_BLOCK_CONTAINERS);
+  const BLOCK_CHECKER = create_set(
+    ALLOWED_BLOCK_CONTAINERS.concat([
+      'P', 'UL', 'OL', 'DL', 'FIGURE', 'TABLE'
+    ])
+  );
+  const insertion_point = function (container) {
+    let wrapper = container;
+    let sibliing = container;
+    while (wrapper && !CONTAINER_CHECKER.has(wrapper.tagName)) {
+      sibling = wrapper;
+      wrapper = wrapper.parentNode;
+    }
+    return sibling
+  };
+
   editor.on('PastePostProcess', function (e) {
     let blob_promises = [];
     let blob_ids = [];
@@ -70,18 +98,15 @@ tinymce.PluginManager.add('paste_plone_image', function(editor, url) {
           let img = editor.contentDocument.getElementById('blob-' + blob_ids[i]);
           if (img) {
             let current_container = img.parentNode;
-            if (new_elem.tagName == 'DIV' || new_elem.tagName == 'P') {
+            if (BLOCK_CHECKER.has(new_elem.tagName)) {
+              // If the image is the only thing in the container, replace the container with the new one.
               if (current_container.children.length == 1 && !current_container.textContent.trim()) {
                 current_container.parentNode.replaceChild(new_elem, current_container);
                 continue;
-              } else if (current_container.tagName == 'P' || current_container.tagName[0] == 'H') {
+              } else {
                 img.remove();
-                current_container.after(new_elem);
-                continue;
-              } else if (current_container.tagName == 'LI' || current_container.tagName == 'DD' || current_container.tagName == 'DT') {
-                img.remove();
-                let list_wrapper = current_container.parentNode;
-                list_wrapper.after(new_elem);
+                let wrapper = insertion_point(current_container);
+                wrapper.after(new_elem);
                 continue;
               }
             }
