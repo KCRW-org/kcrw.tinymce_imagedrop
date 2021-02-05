@@ -67,7 +67,7 @@ tinymce.PluginManager.add('paste_plone_image', function(editor, url) {
         Array.from(document.getElementsByName('form.button.save'))).concat(
         Array.from(document.getElementsByName('form.button.cancel'))).concat(
         Array.from(document.getElementsByName(el_name + '.mimeType'))).concat(
-        Array.from(el_name + '_text_format'));
+        Array.from(document.getElementsByName(el_name + '_text_format')));
       for (let i = 0; i < controls.length; i++) {
         controls[i].disabled = true;
       }
@@ -93,6 +93,7 @@ tinymce.PluginManager.add('paste_plone_image', function(editor, url) {
         },
         dataType: 'json'
       }).done(function (result) {
+        var place_before = false;
         for (let i = 0; i < result.images.length; i++) {
           let new_elem = htmlToElement(result.images[i]);
           let img = editor.contentDocument.getElementById('blob-' + blob_ids[i]);
@@ -104,9 +105,16 @@ tinymce.PluginManager.add('paste_plone_image', function(editor, url) {
                 current_container.parentNode.replaceChild(new_elem, current_container);
                 continue;
               } else {
-                img.remove();
                 let wrapper = insertion_point(current_container);
-                wrapper.after(new_elem);
+                if (img.nextSibling && img.nextSibling.textContent) {
+                  place_before = true;
+                }
+                img.remove();
+                if (place_before) {
+                  wrapper.before(new_elem);
+                } else {
+                  wrapper.after(new_elem);
+                }
                 continue;
               }
             }
